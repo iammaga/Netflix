@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\ActorsController;
+use App\Http\Controllers\MoviesController;
+use App\Http\Controllers\TvController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,14 +21,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('api')->group(function () {
-    Route::get('/movies', 'MoviesController@index')->name('api.movies.index');
-    Route::get('/movies/{id}', 'MoviesController@show')->name('api.movies.show');
+Route::get('/movies', [MoviesController::class, 'index'])->name('api.movies.index');
+Route::get('/movies/{id}', [MoviesController::class, 'show'])->name('api.movies.show');
 
-    Route::get('/tv', 'TvController@index')->name('api.tv.index');
-    Route::get('/tv/{id}', 'TvController@show')->name('api.tv.show');
+Route::get('/tv', [TvController::class, 'index'])->name('api.tv.index');
+Route::get('/tv/{id}', [TvController::class, 'show'])->name('api.tv.show');
 
-    Route::get('/actors', 'ActorsController@index')->name('api.actors.index');
-    Route::get('/actors/page/{page?}', 'ActorsController@index')->name('api.actors.page');
-    Route::get('/actors/{id}', 'ActorsController@show')->name('api.actors.show');
-});
+Route::get('/actors', [ActorsController::class, 'index'])->name('api.actors.index');
+Route::get('/actors/page/{page?}', [ActorsController::class, 'index'])->name('api.actors.page');
+Route::get('/actors/{id}', [ActorsController::class, 'show'])->name('api.actors.show');
