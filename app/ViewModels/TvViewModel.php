@@ -23,9 +23,29 @@ class TvViewModel extends ViewModel
         return $this->formatTv($this->popularTv);
     }
 
-    public function topRatedTv()
+    private function formatTv($tv)
     {
-        return $this->formatTv($this->topRatedTv);
+        return collect($tv)->map(function ($tvshow) {
+            $genresFormatted = collect($tvshow['genre_ids'])->mapWithKeys(function ($value) {
+                return [$value => $this->genres()->get($value)];
+            })->implode(', ');
+
+            return collect($tvshow)->merge([
+                'poster_path' => 'https://image.tmdb.org/t/p/w500/' . $tvshow['poster_path'],
+                'vote_average' => $tvshow['vote_average'] * 10 . '%',
+                'first_air_date' => Carbon::parse($tvshow['first_air_date'])->format('M d, Y'),
+                'genres' => $genresFormatted,
+            ])->only([
+                'poster_path',
+                'id',
+                'genre_ids',
+                'name',
+                'vote_average',
+                'overview',
+                'first_air_date',
+                'genres',
+            ]);
+        });
     }
 
     public function genres()
@@ -35,21 +55,8 @@ class TvViewModel extends ViewModel
         });
     }
 
-    private function formatTv($tv)
+    public function topRatedTv()
     {
-        return collect($tv)->map(function($tvshow) {
-            $genresFormatted = collect($tvshow['genre_ids'])->mapWithKeys(function($value) {
-                return [$value => $this->genres()->get($value)];
-            })->implode(', ');
-
-            return collect($tvshow)->merge([
-                'poster_path' => 'https://image.tmdb.org/t/p/w500/'.$tvshow['poster_path'],
-                'vote_average' => $tvshow['vote_average'] * 10 .'%',
-                'first_air_date' => Carbon::parse($tvshow['first_air_date'])->format('M d, Y'),
-                'genres' => $genresFormatted,
-            ])->only([
-                'poster_path', 'id', 'genre_ids', 'name', 'vote_average', 'overview', 'first_air_date', 'genres',
-            ]);
-        });
+        return $this->formatTv($this->topRatedTv);
     }
 }
