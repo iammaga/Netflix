@@ -3,7 +3,7 @@
         wire:model.debounce.500ms="search"
         type="text"
         class="bg-black text-sm rounded-full w-64 px-4 pl-8 py-1 focus:outline-none focus:shadow-outline border"
-        placeholder="Search (Press '/' to focus)"
+        placeholder="{{ App::getLocale() === 'ru' ? 'Поиск' : 'Search' }}"
         x-ref="search"
         @keydown.window="
             if (event.keyCode === 191) {
@@ -51,7 +51,9 @@
                     @endforeach
                 </ul>
             @else
-                <div class="px-3 py-3">No results for "{{ $search }}"</div>
+                <div class="px-3 py-3">
+                    {{ App::getLocale() === 'ru' ? 'Нет результатов для "' . $search . '"' : 'No results for "' . $search . '"' }}
+                </div>
             @endif
         </div>
     @endif
