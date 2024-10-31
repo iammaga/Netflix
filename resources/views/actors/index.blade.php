@@ -3,7 +3,9 @@
 @section('content')
     <div class="container mx-auto px-4 py-16">
         <div class="popular-actors">
-            <h2 class="uppercase tracking-wider text-gray-100 text-lg font-semibold">Popular Actors</h2>
+            <h2 class="uppercase tracking-wider text-gray-100 text-lg font-semibold">
+                {{ App::getLocale() === 'ru' ? 'Популярные актеры' : 'Popular Actors' }}
+            </h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
                 @foreach ($popularActors as $actor)
                     <div class="actor mt-8">

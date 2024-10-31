@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ViewModels\TvShowViewModel;
 use App\ViewModels\TvViewModel;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
 
 class TvController extends Controller
@@ -15,19 +16,26 @@ class TvController extends Controller
      */
     public function index()
     {
+        $locale = App::getLocale() === 'ru' ? 'ru-RU' : 'en-US';
         $popularTv = Http::withToken(config('services.tmdb.token'))
             ->withOptions(['verify' => false])
-            ->get('https://api.themoviedb.org/3/tv/popular')
+            ->get('https://api.themoviedb.org/3/tv/popular', [
+                'language' => $locale,
+            ])
             ->json()['results'];
 
         $topRatedTv = Http::withToken(config('services.tmdb.token'))
             ->withOptions(['verify' => false])
-            ->get('https://api.themoviedb.org/3/tv/top_rated')
+            ->get('https://api.themoviedb.org/3/tv/top_rated', [
+                'language' => $locale,
+            ])
             ->json()['results'];
 
         $genres = Http::withToken(config('services.tmdb.token'))
             ->withOptions(['verify' => false])
-            ->get('https://api.themoviedb.org/3/genre/tv/list')
+            ->get('https://api.themoviedb.org/3/genre/tv/list', [
+                'language' => $locale,
+            ])
             ->json()['genres'];
 
         $viewModel = new TvViewModel(
@@ -47,9 +55,14 @@ class TvController extends Controller
      */
     public function show($id)
     {
+        $locale = App::getLocale() === 'ru' ? 'ru-RU' : 'en-US';
+
         $tvshow = Http::withToken(config('services.tmdb.token'))
             ->withOptions(['verify' => false])
-            ->get('https://api.themoviedb.org/3/tv/' . $id . '?append_to_response=credits,videos,images')
+            ->get("https://api.themoviedb.org/3/tv/{$id}", [
+                'append_to_response' => 'credits,videos,images',
+                'language' => $locale,
+            ])
             ->json();
 
         $viewModel = new TvShowViewModel($tvshow);

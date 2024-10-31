@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ App::getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Movie App</title>
+    <title>{{ App::getLocale() === 'ru' ? 'Кино Приложение' : 'Movie App' }}</title>
     <link rel="stylesheet" href="/css/main.css">
     <livewire:styles>
         <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
@@ -20,13 +20,16 @@
                 </a>
             </li>
             <li class="md:ml-16 mt-3 md:mt-0">
-                <a href="{{ route('movies.index') }}" class="hover:text-gray-300">Movies</a>
+                <a href="{{ route('movies.index') }}"
+                   class="hover:text-gray-300">{{ App::getLocale() === 'ru' ? 'Фильмы' : 'Movies' }}</a>
             </li>
             <li class="md:ml-6 mt-3 md:mt-0">
-                <a href="{{ route('tv.index') }}" class="hover:text-gray-300">TV Shows</a>
+                <a href="{{ route('tv.index') }}"
+                   class="hover:text-gray-300">{{ App::getLocale() === 'ru' ? 'Телешоу' : 'TV Shows' }}</a>
             </li>
             <li class="md:ml-6 mt-3 md:mt-0">
-                <a href="{{ route('actors.index') }}" class="hover:text-gray-300">Actors</a>
+                <a href="{{ route('actors.index') }}"
+                   class="hover:text-gray-300">{{ App::getLocale() === 'ru' ? 'Актеры' : 'Actors' }}</a>
             </li>
         </ul>
         <div class="flex flex-col md:flex-row items-center">
@@ -37,13 +40,21 @@
                              class="rounded-full w-8 h-8">
                     </a>
                 </div>
+                <div class="md:ml-4 mt-3 md:mt-0">
+                    <a href="{{ route('set-locale', 'en') }}"
+                       class="hover:text-gray-300 {{ App::getLocale() === 'en' ? 'font-bold' : '' }}">EN</a> |
+                    <a href="{{ route('set-locale', 'ru') }}"
+                       class="hover:text-gray-300 {{ App::getLocale() === 'ru' ? 'font-bold' : '' }}">RU</a>
+                </div>
         </div>
+    </div>
     </div>
 </nav>
 @yield('content')
 <footer>
     <div class="container mx-auto text-sm px-4 py-6">
-        Powered by <a href="https://github.com/iammaga" class="underline hover:text-gray-300">Magaツ</a>
+        {{ App::getLocale() === 'ru' ? 'Сделано' : 'Powered by' }} <a href="https://github.com/iammaga"
+                                                                      class="underline hover:text-gray-300">Magaツ</a>
     </div>
 </footer>
 <livewire:scripts>

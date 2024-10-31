@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ViewModels\MoviesViewModel;
 use App\ViewModels\MovieViewModel;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
 
 class MoviesController extends Controller
@@ -15,9 +16,13 @@ class MoviesController extends Controller
      */
     public function index()
     {
+        $locale = App::getLocale() === 'ru' ? 'ru-RU' : 'en-US';
+
         $popularMoviesResponse = Http::withToken(config('services.tmdb.token'))
             ->withOptions(['verify' => false])
-            ->get('https://api.themoviedb.org/3/movie/popular');
+            ->get('https://api.themoviedb.org/3/movie/popular', [
+                'language' => $locale,
+            ]);
 
         if ($popularMoviesResponse->successful()) {
             $popularMovies = $popularMoviesResponse->json()['results'];
@@ -27,7 +32,9 @@ class MoviesController extends Controller
 
         $nowPlayingMoviesResponse = Http::withToken(config('services.tmdb.token'))
             ->withOptions(['verify' => false])
-            ->get('https://api.themoviedb.org/3/movie/now_playing');
+            ->get('https://api.themoviedb.org/3/movie/now_playing', [
+                'language' => $locale,
+            ]);
 
         if ($nowPlayingMoviesResponse->successful()) {
             $nowPlayingMovies = $nowPlayingMoviesResponse->json()['results'];
@@ -37,7 +44,9 @@ class MoviesController extends Controller
 
         $genresResponse = Http::withToken(config('services.tmdb.token'))
             ->withOptions(['verify' => false])
-            ->get('https://api.themoviedb.org/3/genre/movie/list');
+            ->get('https://api.themoviedb.org/3/genre/movie/list', [
+                'language' => $locale,
+            ]);
 
         if ($genresResponse->successful()) {
             $genres = $genresResponse->json()['genres'];
@@ -62,13 +71,30 @@ class MoviesController extends Controller
      */
     public function show($id)
     {
+        $locale = App::getLocale() === 'ru' ? 'ru-RU' : 'en-US';
+
         $movie = Http::withToken(config('services.tmdb.token'))
             ->withOptions(['verify' => false])
-            ->get('https://api.themoviedb.org/3/movie/' . $id . '?append_to_response=credits,videos,images')
+            ->get("https://api.themoviedb.org/3/movie/{$id}", [
+                'append_to_response' => 'credits,videos,images,translations',
+                'language' => $locale,
+            ])
             ->json();
+
+        if ($locale === 'ru-RU') {
+            if (isset($movie['translations']) && isset($movie['translations']['translations'])) {
+                foreach ($movie['translations']['translations'] as $translation) {
+                    if ($translation['iso_639_1'] === 'ru') {
+                        $movie['overview'] = $translation['data']['overview'] ?? $movie['overview'];
+                        break;
+                    }
+                }
+            }
+        }
 
         $viewModel = new MovieViewModel($movie);
 
         return view('movies.show', $viewModel);
     }
+
 }
