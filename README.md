@@ -12,8 +12,8 @@
 ### Шаги установки:
 
 ```bash
-git clone https://github.com/iammaga/laravel-movies-netflix.git
-cd laravel-movies-netflix
+git clone https://github.com/iammaga/Netflix.git
+cd Netflix
 ```
 ```bash
 composer install
