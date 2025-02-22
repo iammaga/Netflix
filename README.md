@@ -33,4 +33,8 @@ php artisan serve
 ```
 В веб-браузере перейдите по адресу: http://localhost:8000.
 
+### Идеа
+```bash
 https://roadmap.sh/projects/movie-reservation-system
+https://roadmap.sh/projects/tmdb-cli
+```
