@@ -32,3 +32,5 @@ php artisan key:generate
 php artisan serve
 ```
 В веб-браузере перейдите по адресу: http://localhost:8000.
+
+https://roadmap.sh/projects/movie-reservation-system
